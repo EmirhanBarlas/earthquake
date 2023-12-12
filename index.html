@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latest Earthquakes in the World Snapshot</title>
+    <meta name="description" content="A great website where you can learn about the latest earthquakes in the world! By Barlas">
+    <style>
+        body{
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header{
+            background-color: #14d86c;
+            color: #ecf0f1;
+            padding: 1em;
+            text-align: center;
+        }
+        main{
+            padding: 1em;
+        }
+        #depremListesi{
+            list-style: none;
+            padding: 0;
+        }
+        .deprem{
+            border: 1px solid #ddd;
+            margin-bottom: 0.5em;
+            padding: 1em;
+            border-radius: 10px;
+        }
+        footer {
+            background-color: transparent;
+            color: black;
+            backdrop-filter: blur(5px);
+            text-align: center;
+            padding: 1em;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        a{
+            text-decoration: none;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Latest Earthquakes in the World Snapshot</h1>
+    </header>
+    <main>
+        <ul id="depremListesi"></ul>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson')
+                .then(response => response.json())
+                .then(data => {
+                    const depremListesi = document.getElementById('depremListesi');
+                    data.features.slice(0, 25).forEach(deprem => {
+                        const listItem = document.createElement('li');
+                        listItem.className = 'deprem';
+                        listItem.innerHTML = `
+                            <strong>Magnitude:</strong> ${deprem.properties.mag}<br>
+                            <strong>Location:</strong> ${deprem.properties.place}<br>
+                            <strong>Time / Date:</strong> ${new Date(deprem.properties.time).toLocaleString()}
+                        `;
+                        depremListesi.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error('Deprem verileri alınamadı.', error));
+        });
+    </script>
+</body>
+</html>
